@@ -3,9 +3,11 @@ print("CLI de Controle de Biblioteca")
 print("=-" * 20)
 
 usuarios = []
-livros = {}
+emprestimos = []
+livros = []
 
 contagem_de_cadastro = 0
+contagem_de_livro = 0
 
 def cadastrar_usuario(nome: str, cpf: int):
     global contagem_de_cadastro
@@ -20,10 +22,17 @@ def validar_cpf(cpf):
     if len(contar_cpf) > 11 or len(contar_cpf) < 11:
         print('CPF inválido!')
 
-def cadastrar_livro(nome, genero, autor, id_livro):
-    return None
+def cadastrar_livro(nome, genero, autor):
+    global contagem_de_livro
+    id_livro = 100000 + contagem_de_livro
+    contagem_de_livro += 1
+    livro = (id_livro, nome, genero, autor)
+    livros.append(livro)
+    return print("livro cadastrado com sucesso!")
 
-def emprestar_livro():
+def emprestar_livro(id_usuario, id_livro):
+    emprestar = dict{idUsuario: id_usuario, idLivro: id_livro}
+
     return None
 
 def devolver_livro():
@@ -54,4 +63,14 @@ while True:
         validar_cpf(cpf)
         cadastrar_usuario(nome, cpf)
 
+    elif operacao == 2:
+        nome = str(input("Nome do livro: "))
+        genero = str(input("Gênero do livrro: "))
+        autor = str(input("Autor do livro: "))
+        cadastrar_livro(nome, genero, autor)
+    elif operacao == 3:
+        None
+
+
 print(usuarios)
+print(livros)
