@@ -3,19 +3,23 @@ print("CLI de Controle de Biblioteca")
 print("=-" * 20)
 
 usuarios = []
-emprestimos = {}
+emprestimos = []
 livros = []
 
 contagem_de_cadastro = 0
 contagem_de_livro = 0
+contagem_de_emprestimos = 0
 
 def cadastrar_usuario(nome: str, cpf: int):
     global contagem_de_cadastro
     id_usuario = 1000 + contagem_de_cadastro
     contagem_de_cadastro += 1
-    user = (id_usuario, nome, cpf)
+    user = {
+        "id_usuario":id_usuario,
+        "nome":nome,
+        "cpf":cpf}
     usuarios.append(user)
-    print(f"Usuario cadastrado com sucesso!\n O usuario {nome}, recebeu o id: {id_usuario}")
+    print(f"Usuario cadastrado com sucesso!\n O usuario {nome}, recebeu o id: {id_usuario}.")
 
 def validar_cpf(cpf):
     contar_cpf = str(cpf)
@@ -28,12 +32,17 @@ def cadastrar_livro(nome, genero, autor):
     global contagem_de_livro
     id_livro = 100000 + contagem_de_livro
     contagem_de_livro += 1
-    livro = (id_livro, nome, genero, autor)
+    livro = {
+        "id_livro": id_livro,
+        "nome": nome,
+        "genero": genero,
+        "autor": autor,
+        "disponivel": True
+    }
     livros.append(livro)
-    return print(f"livro cadastrado com sucesso!\n O livro {nome} recebeu o id {id_livro}")
+    return print(f"livro cadastrado com sucesso!\n O livro {nome} recebeu o id {id_livro}.")
 
-def emprestar_livro(id_usuario, id_livro):
-    
+def emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro):
     return None
 
 def devolver_livro():
@@ -63,19 +72,25 @@ while True:
         cpf = int(input("CPF do usuário: "))
         if validar_cpf(cpf) == False:
             print('CPF inválido!')
-            break
         else:
             cadastrar_usuario(nome, cpf)
 
     elif operacao == 2:
-        nome = str(input("Nome do livro: "))
-        genero = str(input("Gênero do livrro: "))
+        nome = input("Nome do livro: ")
+        genero = str(input("Gênero do livro: "))
         autor = str(input("Autor do livro: "))
         cadastrar_livro(nome, genero, autor)
 
     elif operacao == 3:
-        
         None
+
+#testes 
+    elif operacao == 10:
+        user_id = str(input("user "))
+        livro_id = str(input("user "))
+        emprestar_livro(usuarios, livros, emprestimos, livro_id, user_id)
+    else:
+        print("Opção inválida, tente novamente")
 
 
 print(usuarios)
