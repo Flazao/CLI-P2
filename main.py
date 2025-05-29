@@ -19,7 +19,7 @@ def cadastrar_usuario(nome: str, cpf: int):
         "id_usuario":id_usuario,
         "cpf":cpf}
     usuarios.append(user)
-    print(f"Usuario cadastrado com sucesso!\n O usuario {nome}, recebeu o id: {id_usuario}.\n")
+    print(f"Usuário cadastrado com sucesso!\n O usuário {nome}, recebeu o id: {id_usuario}.\n")
 
 def validar_cpf(cpf):
     contar_cpf = str(cpf)
@@ -104,18 +104,33 @@ def exibir_livros():
     else:
         print('Nenhum livro foi cadastrado')
 
+def deletar_usuario(usuarios, id_usuario):
+    encontrado = False 
+
+    for usuario in usuarios:
+        if usuario["id_usuario"] == id_usuario:
+            encontrado = True 
+            if "emprestimos" in usuario and usuario["emprestimos"]:
+                print(f"O usuário '{usuario['nome']}' não pode ser removido, pois possui livros emprestados.")
+                return 
+            usuario.remove(usuario)
+            print(f"Usuário '{usuario['nome']}' foi deletado com sucesso.")
+
+    if not encontrado:
+        print(f"Usuário com o ID {id_usuario} não encontrado.")
+
 
 print("\nOlá seja bem-vindo!")
 print("Qual operação deseja realizar?")
 print("""
 1 para cadastrar usuario
 2 para cadastrar livro
-3 para ver usuarios cadastrados
+3 para ver usuários cadastrados
 4 para ver livros cadastrados
 5 para emprestimo de livro
 6 para devolver livro
 7 para ver o Historico de Emprestimo
-8 para deletar usuario
+8 para deletar usuário
 9 para deletar livro
 0 para finalizar
       """)
@@ -142,15 +157,15 @@ while True:
         cadastrar_livro(nome, genero, autor)
 
     elif operacao == 3:
-        id_usuario = int(input("Digite o ID do usuário:"))
-        id_livro = int(input("Digite o ID do livro:"))
-        emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro)
-
+        None 
     elif operacao == 4:
         exibir_livros()
 
     elif operacao == 5:
-        None
+        id_usuario = int(input("Digite o ID do usuário:"))
+        id_livro = int(input("Digite o ID do livro:"))
+        emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro)
+        
 
     elif operacao == 6:
         None
@@ -159,7 +174,9 @@ while True:
         None    
 
     elif operacao == 8:
-        None
+        id_usuario = int(input("Insira o ID do usuário que deseja deletar:"))
+        deletar_usuario(usuarios, id_usuario)
+        
 
     
 #testes 
