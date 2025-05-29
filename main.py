@@ -43,7 +43,41 @@ def cadastrar_livro(nome, genero, autor):
     return print(f"livro cadastrado com sucesso!\n O livro {nome} recebeu o id {id_livro}.\n")
 
 def emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro):
-    return None
+    usuario_encontrado = None 
+    for usuario in usuarios:
+        if usuario["id_usuario"] == id_usuario:
+            usuario_encontrado = usuario
+            break
+
+    if not usuario_encontrado:
+        print(f"O usuário com o ID {id_usuario} não foi encontrado.")
+        return 
+
+    livro_encontrado = None 
+    for livro in livros:
+        if livro["id_livro"] == id_livro:
+            livro_encontrado = livro 
+            break
+
+    if not livro_encontrado:
+        print(f"O livro com ID {id_livro} não encontrado.")
+        return
+
+    if not livro_encontrado["disponivel"]:
+        print(f"O livro '{livro_encontrado['nome']}' já está emprestado.")
+        return
+
+    livro_encontrado["disponivel"] = False
+    if "emprestimos" not in usuario_encontrado:
+        usuario_encontrado["emprestimos"] = []
+    usuario_encontrado["emprestimos"].append(id_livro)
+    emprestimos.append({
+        "id_usuario": id_usuario,
+        "id_livro": id_livro
+    })
+
+    print(f"O livro '{livro_encontrado['nome']}' foi emprestado para {usuario_encontrado['nome']} com sucesso!!!")
+
 
 def devolver_livro():
     return None
@@ -108,7 +142,9 @@ while True:
         cadastrar_livro(nome, genero, autor)
 
     elif operacao == 3:
-        exibir_usuarios()
+        id_usuario = int(input("Digite o ID do usuário:"))
+        id_livro = int(input("Digite o ID do livro:"))
+        emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro)
 
     elif operacao == 4:
         exibir_livros()
