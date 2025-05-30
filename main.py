@@ -21,14 +21,14 @@ def cadastrar_usuario(nome: str, cpf: int):
     usuarios.append(user)
     print(f"Usuário cadastrado com sucesso!\n O usuário {nome}, recebeu o id: {id_usuario}.\n")
 
-def validar_cpf(cpf):
+def validar_cpf(cpf: int):
     contar_cpf = str(cpf)
     if len(contar_cpf) != 11:
         return False
     else:
         return True
 
-def cadastrar_livro(nome, genero, autor):
+def cadastrar_livro(nome: str, genero: str, autor: str):
     global contagem_de_livro
     id_livro = 100000 + contagem_de_livro
     contagem_de_livro += 1
@@ -42,7 +42,7 @@ def cadastrar_livro(nome, genero, autor):
     livros.append(livro)
     return print(f"livro cadastrado com sucesso!\n O livro {nome} recebeu o id {id_livro}.\n")
 
-def emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro):
+def emprestar_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: int, id_livro: int):
     usuario_encontrado = None 
     for usuario in usuarios:
         if usuario["id_usuario"] == id_usuario:
@@ -50,8 +50,7 @@ def emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro):
             break
 
     if not usuario_encontrado:
-        print(f"O usuário com o ID {id_usuario} não foi encontrado.")
-        return 
+        return print(f"O usuário com o ID {id_usuario} não foi encontrado.")
 
     livro_encontrado = None 
     for livro in livros:
@@ -60,14 +59,13 @@ def emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro):
             break
 
     if not livro_encontrado:
-        print(f"O livro com ID {id_livro} não encontrado.")
-        return
+        return print(f"O livro com ID {id_livro} não encontrado.")
 
     if not livro_encontrado["disponivel"]:
-        print(f"O livro '{livro_encontrado['nome']}' já está emprestado.")
-        return
+        return print(f"O livro '{livro_encontrado['nome']}' já está emprestado.")
 
     livro_encontrado["disponivel"] = False
+
     if "emprestimos" not in usuario_encontrado:
         usuario_encontrado["emprestimos"] = []
     usuario_encontrado["emprestimos"].append(id_livro)
@@ -76,11 +74,41 @@ def emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro):
         "id_livro": id_livro
     })
 
-    print(f"O livro '{livro_encontrado['nome']}' foi emprestado para {usuario_encontrado['nome']} com sucesso!!!")
+    print(f"O livro '{livro_encontrado['nome']}' foi emprestado para {usuario_encontrado['nome']}\n")
 
+def devolver_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: int, id_livro: int):
+    usuario_encontrado = None 
+    for usuario in usuarios:
+        if usuario["id_usuario"] == id_usuario:
+            usuario_encontrado = usuario
+            break
 
-def devolver_livro():
-    return None
+    if not usuario_encontrado:
+        return print(f"O usuário com o ID {id_usuario} não foi encontrado.")
+
+    livro_encontrado = None 
+    for livro in livros:
+        if livro["id_livro"] == id_livro:
+            livro_encontrado = livro 
+            break
+
+    if not livro_encontrado:
+        return print(f"O livro com ID {id_livro} não encontrado.")
+    
+    if livro_encontrado['disponivel']:
+        return print(f"O livro {livro_encontrado['nome']} está disponivel")
+
+    livro_encontrado['disponivel'] = True
+
+    if "emprestimos" in usuario_encontrado and id_livro in usuario_encontrado["emprestimos"]:
+        usuario_encontrado["emprestimos"].remove(id_livro)
+
+    for emprestimo in emprestimos:
+        if emprestimo["id_usuario"] == id_usuario and emprestimo["id_livro"] == id_livro:
+            emprestimos.remove(emprestimo)
+            break
+
+    print(f'O usuário {usuario_encontrado['nome']} devolveu o livro {livro_encontrado['nome']}!\n')
 
 def ver_historico_usuario():
     return None
@@ -94,7 +122,6 @@ def exibir_usuarios():
     else:
         print("Nenhum usuário foi cadastrado")
 
-
 def exibir_livros():
     if livros:
         for livro in livros:
@@ -104,7 +131,7 @@ def exibir_livros():
     else:
         print('Nenhum livro foi cadastrado')
 
-def deletar_usuario(usuarios, id_usuario):
+def deletar_usuario(usuarios: list, id_usuario: int):
     encontrado = False 
 
     for usuario in usuarios:
@@ -113,7 +140,7 @@ def deletar_usuario(usuarios, id_usuario):
             if "emprestimos" in usuario and usuario["emprestimos"]:
                 print(f"O usuário '{usuario['nome']}' não pode ser removido, pois possui livros emprestados.")
                 return 
-            usuario.remove(usuario)
+            usuarios.remove(usuario)
             print(f"Usuário '{usuario['nome']}' foi deletado com sucesso.")
 
     if not encontrado:
@@ -140,6 +167,7 @@ while True:
     print(' ')
 
     if operacao == 0:
+        print("Obrigado pela preferencia!!\n")
         break
     
     elif operacao == 1:
@@ -157,18 +185,20 @@ while True:
         cadastrar_livro(nome, genero, autor)
 
     elif operacao == 3:
-        None 
+        exibir_usuarios()
+
     elif operacao == 4:
         exibir_livros()
 
     elif operacao == 5:
-        id_usuario = int(input("Digite o ID do usuário:"))
-        id_livro = int(input("Digite o ID do livro:"))
+        id_usuario = int(input("Digite o ID do usuário: "))
+        id_livro = int(input("Digite o ID do livro: "))
         emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro)
         
-
     elif operacao == 6:
-        None
+        id_usuario = int(input("Digite o ID do usuário: "))
+        id_livro = int(input("Digite o ID do livro: "))
+        devolver_livro(usuarios, livros, emprestimos, id_usuario, id_livro)
 
     elif operacao == 7:
         None    
@@ -176,13 +206,3 @@ while True:
     elif operacao == 8:
         id_usuario = int(input("Insira o ID do usuário que deseja deletar:"))
         deletar_usuario(usuarios, id_usuario)
-        
-
-    
-#testes 
-    elif operacao == 10:
-        user_id = str(input("user "))
-        livro_id = str(input("user "))
-        emprestar_livro(usuarios, livros, emprestimos, livro_id, user_id)
-    else:
-        print("Opção inválida, tente novamente")
