@@ -143,8 +143,23 @@ def deletar_usuario(usuarios: list, id_usuario: int):
             usuarios.remove(usuario)
             print(f"Usuário '{usuario['nome']}' foi deletado com sucesso.")
 
-    if not encontrado:
+    if encontrado == False:
         print(f"Usuário com o ID {id_usuario} não encontrado.")
+
+def deletar_livro(livros: list, id_livro: int):
+    encontrado = False
+
+    for livro in livros:
+        if livro["id_livro"] == id_livro:
+            encontrado = True
+            if livro['disponivel'] != "disponivel":
+                print(f"O livro '{livro['nome']}' não pode ser removido, pois está emprestado.")
+                return
+            livros.remove(livro)
+            print(f"Livro '{livro['nome']}' foi deletado com sucesso.")
+
+    if encontrado == False:
+        print(f"Livro com o ID {id_livro} não encontrado.")
 
 
 print("\nOlá seja bem-vindo!")
@@ -174,7 +189,7 @@ while True:
         nome = str(input("Nome do usuário: "))
         cpf = int(input("CPF do usuário: "))
         if validar_cpf(cpf) == False:
-            print('CPF inválido!')
+            print('CPF inválido!\n')
         else:
             cadastrar_usuario(nome, cpf)
 
@@ -205,4 +220,17 @@ while True:
 
     elif operacao == 8:
         id_usuario = int(input("Insira o ID do usuário que deseja deletar:"))
-        deletar_usuario(usuarios, id_usuario)
+        if len(str(id_usuario)) != 4:
+            print(f'ID do usuario errado, Esperado 4 Caracteres não {len(str(id_usuario))}')
+        else:
+            deletar_usuario(usuarios, id_usuario)
+
+    elif operacao == 9:
+        id_livro = int(input("Insira o ID do livro que deseja deletar: "))
+        if len(str(id_livro)) != 6:
+            print(f'ID do livro errado, Esperado 6 Caracteres não {len(str(id_livro))}')
+        else:
+            deletar_livro()
+
+    else:
+        print("Digite uma operação valida\n")
