@@ -71,7 +71,7 @@ def liberar_proximo_da_fila(id_livro: int):
     reserva = buscar_fila(id_livro)
     if reserva and len(reserva["fila"]) > 0:
         proximo_usuario = reserva["fila"].popleft()
-        print(f"O próximo da fila (ID usuário: {proximo_usuario}) pode pegar o livro agora.")
+        print(f"O próximo da fila (ID usuário: {proximo_usuario}) pode pegar o livro agora.\n")
         return proximo_usuario
 
 def emprestar_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: int, id_livro: int):
@@ -82,7 +82,7 @@ def emprestar_livro(usuarios: list, livros: list, emprestimos: list, id_usuario:
             break
 
     if usuario_encontrado is None:
-        print(f"O usuário com o ID {id_usuario} não foi encontrado.")
+        print(f"O usuário com o ID {id_usuario} não foi encontrado.\n")
         return
 
     livro_encontrado = None 
@@ -92,7 +92,7 @@ def emprestar_livro(usuarios: list, livros: list, emprestimos: list, id_usuario:
             break
 
     if livro_encontrado is None:
-        print(f"O livro com ID {id_livro} não encontrado.")
+        print(f"O livro com ID {id_livro} não encontrado.\n")
         return
 
     if livro_encontrado["disponivel"] == False:
@@ -108,7 +108,7 @@ def emprestar_livro(usuarios: list, livros: list, emprestimos: list, id_usuario:
     })
 
     historico.append(("Empréstimo", usuario_encontrado['nome'], livro_encontrado['nome']))
-    print(f"O livro '{livro_encontrado['nome']}' foi emprestado para {usuario_encontrado['nome']}\n")
+    print(f"O livro '{livro_encontrado['nome']}' foi emprestado para {usuario_encontrado['nome']}.\n")
 
 def devolver_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: int, id_livro: int):
     usuario_encontrado = None 
@@ -118,7 +118,7 @@ def devolver_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: 
             break
 
     if usuario_encontrado is None:
-        print(f"O usuário com o ID {id_usuario} não foi encontrado.")
+        print(f"O usuário com o ID {id_usuario} não foi encontrado.\n")
         return
 
     livro_encontrado = None 
@@ -128,11 +128,11 @@ def devolver_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: 
             break
 
     if livro_encontrado is None:
-        print(f"O livro com ID {id_livro} não encontrado.")
+        print(f"O livro com ID {id_livro} não encontrado.\n")
         return
     
     if livro_encontrado['disponivel']:
-        print(f"O livro {livro_encontrado['nome']} está disponivel")
+        print(f"O livro {livro_encontrado['nome']} está disponivel.")
         return
 
     livro_encontrado['disponivel'] = True
@@ -146,31 +146,31 @@ def devolver_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: 
             break
 
     historico.append(("Devolução", usuario_encontrado['nome'], livro_encontrado['nome']))
-    print(f'O usuário {usuario_encontrado["nome"]} devolveu o livro {livro_encontrado["nome"]}!\n')
+    print(f'O usuário {usuario_encontrado["nome"]} devolveu o livro {livro_encontrado["nome"]}.\n')
 
     proximo = liberar_proximo_da_fila(id_livro)
     if proximo:
         emprestar_livro(usuarios, livros, emprestimos, proximo, id_livro)
 
 def exibir_usuarios():
-    historico.append(f"Consulta de usuarios cadastrados")
+    historico.append(("Consulta de usuarios cadastrados", len(usuarios)))
     if usuarios:
         for usuario in usuarios:
             for chave, valor in usuario.items():
                 print(f'{chave}: {valor}')
             print(' ')
     else:
-        print("Nenhum usuário foi cadastrado")
+        print("Nenhum usuário foi cadastrado.\n")
 
 def exibir_livros():
-    historico.append(f"Consulta de livros cadastrados")
+    historico.append(("Consulta de livros cadastrados", len(livros)))
     if livros:
         for livro in livros:
             for chave, valor in livro.items():
                 print(f'{chave}: {valor}')
             print(' ')
     else:
-        print('Nenhum livro foi cadastrado')
+        print('Nenhum livro foi cadastrado.\n')
 
 def deletar_usuario(usuarios: list, id_usuario: int):
     encontrado = False 
@@ -179,14 +179,14 @@ def deletar_usuario(usuarios: list, id_usuario: int):
         if usuario["id_usuario"] == id_usuario:
             encontrado = True 
             if usuario["emprestimos"]:
-                print(f"O usuário '{usuario['nome']}' não pode ser removido, pois possui livros emprestados.")
+                print(f"O usuário '{usuario['nome']}' não pode ser removido, pois possui livros emprestados.\n")
                 return 
             usuarios.remove(usuario)
             historico.append(("Usuário deletado", usuario['nome']))
-            print(f"Usuário '{usuario['nome']}' foi deletado com sucesso.")
+            print(f"Usuário '{usuario['nome']}' foi deletado com sucesso.\n")
 
     if encontrado == False:
-        print(f"Usuário com o ID {id_usuario} não encontrado.")
+        print(f"Usuário com o ID {id_usuario} não encontrado.\n")
 
 def deletar_livro(livros: list, id_livro: int):
     encontrado = False
