@@ -8,6 +8,7 @@ usuarios = []
 livros = []
 emprestimos = []
 reservas = []
+historico = []
 
 contagem_de_cadastro = 0
 contagem_de_livro = 0
@@ -23,6 +24,7 @@ def cadastrar_usuario(nome: str, cpf: int):
         "emprestimos": []
     }
     usuarios.append(user)
+    historico.append((f"Cadastro de usuário, {nome} recebeu o id {id_usuario}"))
     print(f"Usuário cadastrado com sucesso!\n O usuário {nome}, recebeu o id: {id_usuario}.\n")
 
 def validar_cpf(cpf: int):
@@ -44,6 +46,7 @@ def cadastrar_livro(nome: str, genero: str, autor: str):
         "disponivel": True
     }
     livros.append(livro)
+    historico.append(f"Cadastro de livro,o livro {nome} recebeu o id {id_livro}")
     print(f"livro cadastrado com sucesso!\n O livro {nome} recebeu o id {id_livro}.\n")
 
 def buscar_fila(id_livro: int):
@@ -104,6 +107,7 @@ def emprestar_livro(usuarios: list, livros: list, emprestimos: list, id_usuario:
         "id_livro": id_livro
     })
 
+    historico.append(f"Empréstimo de livro, livro '{livro_encontrado['nome']}' para {usuario_encontrado['nome']}")
     print(f"O livro '{livro_encontrado['nome']}' foi emprestado para {usuario_encontrado['nome']}\n")
 
 def devolver_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: int, id_livro: int):
@@ -141,6 +145,7 @@ def devolver_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: 
             emprestimos.remove(emprestimo)
             break
 
+    historico.append(f"Devolução de livro, {usuario_encontrado['nome']} devolveu '{livro_encontrado['nome']}'.")
     print(f'O usuário {usuario_encontrado["nome"]} devolveu o livro {livro_encontrado["nome"]}!\n')
 
     proximo = liberar_proximo_da_fila(id_livro)
@@ -148,6 +153,7 @@ def devolver_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: 
         emprestar_livro(usuarios, livros, emprestimos, proximo, id_livro)
 
 def exibir_usuarios():
+    historico.append(f"Consulta de usuarios cadastrados")
     if usuarios:
         for usuario in usuarios:
             for chave, valor in usuario.items():
@@ -157,6 +163,7 @@ def exibir_usuarios():
         print("Nenhum usuário foi cadastrado")
 
 def exibir_livros():
+    historico.append(f"Consulta de livros cadastrados")
     if livros:
         for livro in livros:
             for chave, valor in livro.items():
@@ -175,6 +182,7 @@ def deletar_usuario(usuarios: list, id_usuario: int):
                 print(f"O usuário '{usuario['nome']}' não pode ser removido, pois possui livros emprestados.")
                 return 
             usuarios.remove(usuario)
+            historico.append(f"Usuário '{usuario['nome']}' deletado.")
             print(f"Usuário '{usuario['nome']}' foi deletado com sucesso.")
 
     if encontrado == False:
@@ -190,6 +198,7 @@ def deletar_livro(livros: list, id_livro: int):
                 print(f"O livro '{livro['nome']}' não pode ser removido, pois está emprestado.")
                 return
             livros.remove(livro)
+            historico.append(f"Livro '{livro['nome']}' deletado.")
             print(f"Livro '{livro['nome']}' foi deletado com sucesso.")
 
     if encontrado == False:
@@ -249,7 +258,7 @@ while True:
         devolver_livro(usuarios, livros, emprestimos, id_usuario, id_livro)
 
     elif operacao == 7:
-        print("Funcionalidade de histórico de empréstimo ainda não implementada.\n")   
+        print(historico)  
 
     elif operacao == 8:
         id_usuario = int(input("Insira o ID do usuário que deseja deletar:"))
