@@ -24,7 +24,7 @@ def cadastrar_usuario(nome: str, cpf: int):
         "emprestimos": []
     }
     usuarios.append(user)
-    historico.append((f"Cadastro de usuário, {nome} recebeu o id {id_usuario}"))
+    historico.append(("Cadastro de usuário", nome, id_usuario))
     print(f"Usuário cadastrado com sucesso!\n O usuário {nome}, recebeu o id: {id_usuario}.\n")
 
 def validar_cpf(cpf: int):
@@ -46,7 +46,7 @@ def cadastrar_livro(nome: str, genero: str, autor: str):
         "disponivel": True
     }
     livros.append(livro)
-    historico.append(f"Cadastro de livro,o livro {nome} recebeu o id {id_livro}")
+    historico.append(("Cadastro de livro", nome, id_livro))
     print(f"livro cadastrado com sucesso!\n O livro {nome} recebeu o id {id_livro}.\n")
 
 def buscar_fila(id_livro: int):
@@ -107,7 +107,7 @@ def emprestar_livro(usuarios: list, livros: list, emprestimos: list, id_usuario:
         "id_livro": id_livro
     })
 
-    historico.append(f"Empréstimo de livro, livro '{livro_encontrado['nome']}' para {usuario_encontrado['nome']}")
+    historico.append(("Empréstimo", usuario_encontrado['nome'], livro_encontrado['nome']))
     print(f"O livro '{livro_encontrado['nome']}' foi emprestado para {usuario_encontrado['nome']}\n")
 
 def devolver_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: int, id_livro: int):
@@ -145,7 +145,7 @@ def devolver_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: 
             emprestimos.remove(emprestimo)
             break
 
-    historico.append(f"Devolução de livro, {usuario_encontrado['nome']} devolveu '{livro_encontrado['nome']}'.")
+    historico.append(("Devolução", usuario_encontrado['nome'], livro_encontrado['nome']))
     print(f'O usuário {usuario_encontrado["nome"]} devolveu o livro {livro_encontrado["nome"]}!\n')
 
     proximo = liberar_proximo_da_fila(id_livro)
@@ -182,7 +182,7 @@ def deletar_usuario(usuarios: list, id_usuario: int):
                 print(f"O usuário '{usuario['nome']}' não pode ser removido, pois possui livros emprestados.")
                 return 
             usuarios.remove(usuario)
-            historico.append(f"Usuário '{usuario['nome']}' deletado.")
+            historico.append(("Usuário deletado", usuario['nome']))
             print(f"Usuário '{usuario['nome']}' foi deletado com sucesso.")
 
     if encontrado == False:
@@ -198,7 +198,7 @@ def deletar_livro(livros: list, id_livro: int):
                 print(f"O livro '{livro['nome']}' não pode ser removido, pois está emprestado.")
                 return
             livros.remove(livro)
-            historico.append(f"Livro '{livro['nome']}' deletado.")
+            historico.append(("Livro deletado", livro['nome']))
             print(f"Livro '{livro['nome']}' foi deletado com sucesso.")
 
     if encontrado == False:
@@ -220,59 +220,64 @@ print("""
       """)
 
 while True:
-    operacao = int(input("\033[32mInsira a opção: \033[m"))
-    print(' ')
-
-    if operacao == 0:
-        print("-=" * 20, "\n")
-        break
-    
-    elif operacao == 1:
-        nome = str(input("Nome do usuário: "))
-        cpf = int(input("CPF do usuário: "))
-        if validar_cpf(cpf) == False:
-            print('CPF inválido!\n')
-        else:
-            cadastrar_usuario(nome, cpf)
-
-    elif operacao == 2:
-        nome = input("Nome do livro: ")
-        genero = str(input("Gênero do livro: "))
-        autor = str(input("Autor do livro: "))
-        cadastrar_livro(nome, genero, autor)
-
-    elif operacao == 3:
-        exibir_usuarios()
-
-    elif operacao == 4:
-        exibir_livros()
-
-    elif operacao == 5:
-        id_usuario = int(input("Digite o ID do usuário: "))
-        id_livro = int(input("Digite o ID do livro: "))
-        emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro)
+    try:
+        operacao = int(input("\033[32mInsira a opção: \033[m"))
+        print(' ')
         
-    elif operacao == 6:
-        id_usuario = int(input("Digite o ID do usuário: "))
-        id_livro = int(input("Digite o ID do livro: "))
-        devolver_livro(usuarios, livros, emprestimos, id_usuario, id_livro)
+        if operacao == 0:
+            print("-=" * 20, "\n")
+            break
+        
+        elif operacao == 1:
+            nome = str(input("Nome do usuário: "))
+            cpf = int(input("CPF do usuário: "))
+            if validar_cpf(cpf) == False:
+                print('CPF inválido!\n')
+            else:
+                cadastrar_usuario(nome, cpf)
 
-    elif operacao == 7:
-        print(historico)  
+        elif operacao == 2:
+            nome = input("Nome do livro: ")
+            genero = str(input("Gênero do livro: "))
+            autor = str(input("Autor do livro: "))
+            cadastrar_livro(nome, genero, autor)
 
-    elif operacao == 8:
-        id_usuario = int(input("Insira o ID do usuário que deseja deletar:"))
-        if len(str(id_usuario)) != 4:
-            print(f'ID do usuario errado, Esperado 4 Caracteres não {len(str(id_usuario))}')
+        elif operacao == 3:
+            exibir_usuarios()
+
+        elif operacao == 4:
+            exibir_livros()
+
+        elif operacao == 5:
+            id_usuario = int(input("Digite o ID do usuário: "))
+            id_livro = int(input("Digite o ID do livro: "))
+            emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro)
+            
+        elif operacao == 6:
+            id_usuario = int(input("Digite o ID do usuário: "))
+            id_livro = int(input("Digite o ID do livro: "))
+            devolver_livro(usuarios, livros, emprestimos, id_usuario, id_livro)
+
+        elif operacao == 7:
+            for acao in historico:
+                print(acao)  
+
+        elif operacao == 8:
+            id_usuario = int(input("Insira o ID do usuário que deseja deletar:"))
+            if len(str(id_usuario)) != 4:
+                print(f'ID do usuario errado, Esperado 4 Caracteres não {len(str(id_usuario))}\n')
+            else:
+                deletar_usuario(usuarios, id_usuario)
+
+        elif operacao == 9:
+            id_livro = int(input("Insira o ID do livro que deseja deletar: "))
+            if len(str(id_livro)) != 6:
+                print(f'ID do livro errado, Esperado 6 Caracteres não {len(str(id_livro))}\n')
+            else:
+                deletar_livro(livros, id_livro)
+
         else:
-            deletar_usuario(usuarios, id_usuario)
+            print("Digite uma operação valida\n")
 
-    elif operacao == 9:
-        id_livro = int(input("Insira o ID do livro que deseja deletar: "))
-        if len(str(id_livro)) != 6:
-            print(f'ID do livro errado, Esperado 6 Caracteres não {len(str(id_livro))}')
-        else:
-            deletar_livro(livros, id_livro)
-
-    else:
-        print("Digite uma operação valida\n")
+    except ValueError:
+        print('\nDigite apenas números por favor.\n')
