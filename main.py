@@ -41,10 +41,9 @@ def cadastrar_livro(nome: str, genero: str, autor: str):
     livros.append(livro)
     historico.append(("Cadastro de livro", nome, id_livro))
     print(f"livro cadastrado com sucesso!\n O livro {nome} recebeu o id {id_livro}.\n")
-
+  
 def validar_cpf(cpf: str): 
-
-    if len(cpf) != 11 or cpf.isdigit() == False:
+    if len(cpf) != 11 or cpf.isdecimal() == False:
         return False
     for usuario in usuarios:
         if cpf == usuario['cpf']:
@@ -212,20 +211,21 @@ def deletar_livro(livros: list, id_livro: int):
 
 print("\nOlá seja bem-vindo!")
 print("Qual operação deseja realizar?")
-print("""
-1 para cadastrar usuario
-2 para cadastrar livro
-3 para ver usuários cadastrados
-4 para ver livros cadastrados
-5 para emprestimo de livro
-6 para devolver livro
-7 para deletar usuário
-8 para deletar livro
-9 para ver o Historico
-0 para finalizar
-      """)
+
+mostrar_menu = True
 
 while True:
+    if mostrar_menu == True:
+        print("\n1 para cadastrar usuário")
+        print("2 para cadastrar livro")
+        print("3 para exibir cadastros/histórico")
+        print("4 para empréstimo de livro")
+        print("5 para devolver livro")
+        print("6 para deletar usuário")
+        print("7 para deletar livro")
+        print("0 para finalizar\n")
+        mostrar_menu = False
+
     try:
         operacao = int(input("\033[32mInsira a opção: \033[m"))
         print(' ')
@@ -249,40 +249,59 @@ while True:
             cadastrar_livro(nome, genero, autor)
 
         elif operacao == 3:
-            exibir_usuarios()
+
+            print("1 para exibir usuários cadastrados")
+            print("2 para exibir livros cadastrados")
+            print("3 para exibir Histórico")
+            print("0 para sair de exibir\n")
+
+            while True:
+                try:
+                    operacao_exibir = int(input("\033[32mInsira a opção: \033[m"))
+
+                    if operacao_exibir == 0:
+                        mostrar_menu = True
+                        break
+
+                    elif operacao_exibir == 1:
+                        exibir_usuarios()
+
+                    elif operacao_exibir == 2:
+                        exibir_livros()
+                        
+                    elif operacao_exibir == 3:
+                        for acao in historico:
+                            print(acao)
+                    else:
+                        print("operação invalida\n")
+                except ValueError:
+                     print('\nDigite apenas números por favor.\n')
 
         elif operacao == 4:
-            exibir_livros()
-
-        elif operacao == 5:
             id_usuario = int(input("Digite o ID do usuário: "))
             id_livro = int(input("Digite o ID do livro: "))
             emprestar_livro(usuarios, livros, emprestimos, id_usuario, id_livro)
             
-        elif operacao == 6:
+        elif operacao == 5:
             id_usuario = int(input("Digite o ID do usuário: "))
             id_livro = int(input("Digite o ID do livro: "))
             devolver_livro(usuarios, livros, emprestimos, id_usuario, id_livro)
 
 
-        elif operacao == 7:
+        elif operacao == 6:
             id_usuario = int(input("Insira o ID do usuário que deseja deletar:"))
             if len(str(id_usuario)) != 4:
                 print(f'ID do usuario errado, Esperado 4 Caracteres não {len(str(id_usuario))}\n')
             else:
                 deletar_usuario(usuarios, id_usuario)
 
-        elif operacao == 8:
+        elif operacao == 7:
             id_livro = int(input("Insira o ID do livro que deseja deletar: "))
             if len(str(id_livro)) != 6:
                 print(f'ID do livro errado, Esperado 6 Caracteres não {len(str(id_livro))}\n')
             else:
                 deletar_livro(livros, id_livro)
                 
-        elif operacao == 9:
-            for acao in historico:
-                print(acao)  
-
         else:
             print("Digite uma operação valida\n")
 
