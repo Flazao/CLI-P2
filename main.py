@@ -200,8 +200,8 @@ def deletar_livro(livros: list, id_livro: int):
         if livro["id_livro"] == id_livro:
             encontrado = True
             if livro['disponivel'] == False:
-                print(f"O livro '{livro['nome']}' não pode ser removido, pois está emprestado.")
-                return
+               return print(f"O livro '{livro['nome']}' não pode ser removido, pois está emprestado.")
+            
             livros.remove(livro)
             historico.append(("Livro deletado", livro['nome']))
             print(f"Livro '{livro['nome']}' foi deletado com sucesso.")
@@ -209,9 +209,35 @@ def deletar_livro(livros: list, id_livro: int):
     if encontrado == False:
         print(f"Livro com o ID {id_livro} não encontrado.")
 
+def exibir_reservas():
+    if reservas:
+        pessoas_reservas = {} 
+        for reserva in reservas:
+            nome_livro = None
+            for livro in livros:
+                if livro["id_livro"] == reserva["id_livro"]:
+                    nome_livro = livro["nome"]
+                    break
+            if nome_livro is None:
+                continue  
+
+            nome_usuario = []
+            for id_usuario in reserva["fila"]:
+                for usuario in usuarios:
+                    if usuario["id_usuario"] == id_usuario:
+                        nome_usuario.append(usuario["nome"])
+                        break
+
+            pessoas_reservas[nome_livro] = nome_usuario
+
+        print("Reservas pendentes em cada Livro:")
+        for livro, usuarios_lista in pessoas_reservas.items():
+            print(f"- {livro}: {usuarios_lista}")
+    else:
+        print("Não há reservas pendentes no momento.\n")
+
 print("\nOlá seja bem-vindo!")
 print("Qual operação deseja realizar?")
-
 mostrar_menu = True
 
 while True:
@@ -253,6 +279,7 @@ while True:
             print("1 para exibir usuários cadastrados")
             print("2 para exibir livros cadastrados")
             print("3 para exibir Histórico")
+            print("4 para exibir Reservas Pendentes de Livro")
             print("0 para sair de exibir\n")
 
             while True:
@@ -270,8 +297,14 @@ while True:
                         exibir_livros()
                         
                     elif operacao_exibir == 3:
+                        if not historico:
+                            print("Nenhuma ação foi feita.\n")
                         for acao in historico:
                             print(acao)
+
+                    elif operacao == 4:
+                        exibir_reservas()
+
                     else:
                         print("operação invalida\n")
                 except ValueError:
@@ -301,6 +334,7 @@ while True:
                 print(f'ID do livro errado, Esperado 6 Caracteres não {len(str(id_livro))}\n')
             else:
                 deletar_livro(livros, id_livro)
+
                 
         else:
             print("Digite uma operação valida\n")
