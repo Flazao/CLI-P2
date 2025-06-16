@@ -47,12 +47,9 @@ def validar_cpf(cpf: str):
         return False
     for usuario in usuarios:
         if cpf == usuario['cpf']:
+            print("CPF repetido")
             return False
-        else:
-            return True
-    
-    else:
-        return True
+    return True
     
 def buscar_fila(id_livro: int):
     for reserva in reservas:
@@ -141,6 +138,11 @@ def devolver_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: 
         return
 
     livro_encontrado['disponivel'] = True
+
+    if id_livro not in usuario_encontrado["emprestimos"]:
+        print(f"O usuário {usuario_encontrado['nome']} não pode devolver o livro {livro_encontrado['nome']} pois não está com ele.\n")
+        return
+
 
     if id_livro in usuario_encontrado["emprestimos"]:
         usuario_encontrado["emprestimos"].remove(id_livro)
