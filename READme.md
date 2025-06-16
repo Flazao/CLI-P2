@@ -117,3 +117,7 @@ O loop principal permanece em execução até que o usuário selecione a opção
 
 Este projeto foi criado com base em uma atividade, sendo uma base para sistemas mais complexos, esta estrutura é uma introdução prática à manipulação de listas, filas (FIFO), dicionários, tuplas e à organização lógica de dados em Python. Ao unir teoria e prática em um código funcional, o sistema ofereceu uma forma de reforçar conceitos vistos dentro da sala de aula, além de oferecer um jeito de entender de fato como as estruturas de dados se comportam na prática.
 Durante o desenvolvimento, foi possível perceber que mesmo funcionalidades simples, como o cadastro de um usuário ou a devolução de um livro, exigem uma lógica bem  e de certa forma complexa para evitar falhas ou dados errados. O desafio de pensar nos conexões entre dados, nas validações e na comunicação com o usuário foi uma forma de nos ajudar a entender mais sobre a estrutura e funcionamento dos dados.
+
+# (EXTRA) Exibição de reservas pendentes
+
+O sistema possui uma função extra que permite visualizar todas as reservas pendentes de cada livro. Ela exibe, para cada livro com fila de espera, os nomes dos usuários que estão aguardando para pegar o livro emprestado. A consulta é feita de forma agrupada e organizada usando um dicionário, facilitando o acompanhamento das reservas ativas. Caso não existam reservas, uma mensagem informando isso é exibida.
