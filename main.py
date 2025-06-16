@@ -140,7 +140,7 @@ def devolver_livro(usuarios: list, livros: list, emprestimos: list, id_usuario: 
     livro_encontrado['disponivel'] = True
 
     if id_livro not in usuario_encontrado["emprestimos"]:
-        print(f"O usuário {usuario_encontrado['nome']} não pode devolver o livro {livro_encontrado['nome']} pois não está com ele.\n")
+        print(f"O usuário {usuario_encontrado['nome']} não pode devolver o livro {livro_encontrado['nome']} pois não está com ele/a.\n")
         return
 
 
@@ -204,10 +204,15 @@ def deletar_livro(livros: list, id_livro: int):
             if livro['disponivel'] == False:
                return print(f"O livro '{livro['nome']}' não pode ser removido, pois está emprestado.")
             
+            for reserva in reservas:
+                if reserva["id_livro"] == id_livro and len(reserva["fila"]) > 0:
+                    return print(f"O livro '{livro['nome']}' não pode ser removido, pois possui reservas pendentes.")
+                   
+
             livros.remove(livro)
             historico.append(("Livro deletado", livro['nome']))
             print(f"Livro '{livro['nome']}' foi deletado com sucesso.")
-
+            
     if encontrado == False:
         print(f"Livro com o ID {id_livro} não encontrado.")
 
@@ -304,7 +309,7 @@ while True:
                         for acao in historico:
                             print(acao)
 
-                    elif operacao == 4:
+                    elif operacao_exibir == 4:
                         exibir_reservas()
 
                     else:
