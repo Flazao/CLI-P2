@@ -224,9 +224,7 @@ def exibir_reservas():
             for livro in livros:
                 if livro["id_livro"] == reserva["id_livro"]:
                     nome_livro = livro["nome"]
-                    break
-            if nome_livro is None:
-                continue  
+                    break 
 
             nome_usuario = []
             for id_usuario in reserva["fila"]:
